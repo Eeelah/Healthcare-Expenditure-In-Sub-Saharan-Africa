@@ -79,17 +79,17 @@ Country_summary %>%
   arrange(Total_health_expense)                                     
 
 
-#Subset the countries with health expenditures greater than $7000k and call them Top Spenders
+#Subset the countries with health expenditures greater than $7M and call them Top Spenders
 Top_spenders <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
   summarise(Total_health_expense = Total_health_expense / 1000)%>%
   filter(Total_health_expense  >= 7) #In order of spending, Seychelles, South Africa, Namibia, Mauritius, Botswana rank highest.They make up 49.32 % of health expenditure.
 
-#In order of spending, Seychelles, South Africa, Namibia, Mauritius, Botswana rank highest.They make up 49.32 % of health expenditure.
 
 
-#Subset the countries with health expenditures greater than $500k and call them Bottom Spenders
+
+#Subset the countries with health expenditures greater than $5M and call them Bottom Spenders
 Bottom_spenders <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
@@ -97,7 +97,7 @@ Bottom_spenders <- Country_summary %>%
   filter(Total_health_expense <5)
 
 Bottom_spenders %>%
-  arrange(desc(Total_health_expense))  # 7 out of 47 countries have current health expenditures under 500 million dollars. They make up 2.77 % of health expenditure.
+  arrange(desc(Total_health_expense))  # 7 out of 47 countries have current health expenditures under 5 million dollars. They make up 2.77 % of health expenditure.
 
 
 # What region  does these bottom spenders belong?
