@@ -24,7 +24,7 @@ df <- read.csv("Current_health_expenditure.csv")
 df = select(df, -c(X))  
 df = df[-c(1),]
 
-# pivot1 --> convert wide form data to long form data
+# pivot --> convert wide form data to long form data
 health_expense <- df %>%
   pivot_longer(df$Indicators, cols = c('X2000' : 'X2019'),  
                names_to = "yearly_health_expense",
@@ -45,7 +45,7 @@ health_expense <- health_expense %>%
                                      median(health_expenditure, na.rm = T),    # logical function that checks for na's in the variable health_exp, if found, replaces with median and removes the na, Else returns health_exp
                                      health_expenditure))
 
-# health_expense --> Make a subregional category column that maps each country to its region 
+# health_expense --> Make a sub-regional category column that maps each country to its region 
 source("Region.R")
 health_expense <-health_expense %>%
   mutate(
@@ -79,7 +79,7 @@ Country_summary %>%
   arrange(Total_health_expense)                                     
 
 
-#Subset the countries with health expenditures greater than $7M and call them Top Spenders
+#Subset the countries with health expenditures greater than $7M and call them high rollers
 high_rollers <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
@@ -89,7 +89,7 @@ high_rollers <- Country_summary %>%
 
 
 
-#Subset the countries with health expenditures greater than $5M and call them Bottom Spenders
+#Subset the countries with health expenditures less than $5M and call them low rollers
 low_rollers <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
@@ -100,7 +100,7 @@ low_rollers %>%
   arrange(desc(Total_health_expense))  # 7 out of 47 countries have current health expenditures under 5 million dollars. They make up 2.77 % of health expenditure.
 
 
-# What region  does these bottom spenders belong?
+# What region  does these low rollers belong?
 source("Region.R")
 reg_bottom_spenders <-Bottom_spenders %>%
   mutate(
@@ -115,7 +115,7 @@ reg_bottom_spenders <-Bottom_spenders %>%
 # take a count of the countries mapped to the regional slackers
 reg_bottom_spenders_count <- reg_bottom_spenders %>%
   group_by( Sub_reg_grp) %>%
-  summarise(regional_frequency = n()) %>%                     #Western Africa accounts for 3 out of 7 Bottom spenders
+  summarise(regional_frequency = n()) %>%                     #Western Africa accounts for 3 out of 7 Countries with low health expenditure
   mutate(regional_frequency / sum(regional_frequency) * 100) 
 
 
@@ -143,8 +143,8 @@ yearly_exp_change <-yearly_summary %>%
          ChangePercent = (Change_exp/pre_exp) * 100)
 
 
-#Data visualization -- Countries whose health expenditure >= $7000k
-row_rollers %>%
+#Data visualization -- Countries whose health expenditure > $7M
+high_rollers %>%
   group_by(Countries, Total_health_expense) %>%
   summarise(total = Total_health_expense)%>%
   ggplot(aes(x = Countries, y = Total_health_expense, width = 0.5, fill =  Countries)) +
@@ -183,7 +183,7 @@ low_rollers %>%
   
 
 
-#Data Visualization -- Health Expenditure trend
+#Data Visualization -- Health Expenditure trends
 yearly_summary %>%
   group_by(yearly_health_expense) %>%
   summarise(yearly_percentage)%>%
