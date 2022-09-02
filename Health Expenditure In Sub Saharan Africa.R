@@ -80,7 +80,7 @@ Country_summary %>%
 
 
 #Subset the countries with health expenditures greater than $7M and call them Top Spenders
-Top_spenders <- Country_summary %>%    
+high_rollers <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
   summarise(Total_health_expense = Total_health_expense / 1000)%>%
@@ -90,13 +90,13 @@ Top_spenders <- Country_summary %>%
 
 
 #Subset the countries with health expenditures greater than $5M and call them Bottom Spenders
-Bottom_spenders <- Country_summary %>%    
+low_rollers <- Country_summary %>%    
   group_by(Countries) %>%
   select(Countries, Total_health_expense, percentage_expenditure) %>%
   summarise(Total_health_expense = Total_health_expense / 100)%>%
   filter(Total_health_expense <5)
 
-Bottom_spenders %>%
+low_rollers %>%
   arrange(desc(Total_health_expense))  # 7 out of 47 countries have current health expenditures under 5 million dollars. They make up 2.77 % of health expenditure.
 
 
@@ -144,7 +144,7 @@ yearly_exp_change <-yearly_summary %>%
 
 
 #Data visualization -- Countries whose health expenditure >= $7000k
-Top_spenders %>%
+row_rollers %>%
   group_by(Countries, Total_health_expense) %>%
   summarise(total = Total_health_expense)%>%
   ggplot(aes(x = Countries, y = Total_health_expense, width = 0.5, fill =  Countries)) +
@@ -162,8 +162,8 @@ scale_y_continuous(labels=scales::dollar_format())+
   
 
 
-#Data Visualization -- Countries whose health expenditure is less than $500k
-Bottom_spenders %>%
+#Data Visualization -- Countries whose health expenditure is less than $5M
+low_rollers %>%
   group_by(Countries, Total_health_expense) %>%
   summarise(Total_health_expense)%>%
   ggplot(aes(x = Countries, y = Total_health_expense, width = 0.3, fill = Countries)) +
